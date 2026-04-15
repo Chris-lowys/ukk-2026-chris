@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    volumes:
+      - .:/var/www
     container_name: pengaduan_app
     restart: unless-stopped
     ports:
