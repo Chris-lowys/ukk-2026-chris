@@ -50,7 +50,7 @@
             @else
                 {{-- Info jumlah --}}
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="fw-semibold">📋 Hasil Pengaduan</span>
+                    <span class="fw-semibold text-white">📋 Hasil Pengaduan</span>
                     <span class="badge bg-primary rounded-pill">
                         {{ $data->count() }} pengaduan
                     </span>
@@ -87,15 +87,40 @@
                             </p>
 
                             {{-- Tanggal --}}
-                            <small class="text-muted">
+                            <small class="text-muted d-block mb-3">
                                 🕐 {{ $d->created_at->format('d M Y, H:i') }}
                             </small>
 
+                            {{-- TAMPILAN LAMPIRAN UNTUK SISWA --}}
+                            @if($d->lampiran)
+                                <div class="p-3 bg-light rounded border mb-3">
+                                    <span class="fw-semibold d-block mb-2 text-dark">📎 Lampiran Pengaduan:</span>
+                                    @php
+                                        $ext = pathinfo($d->lampiran, PATHINFO_EXTENSION);
+                                    @endphp
+
+                                    {{-- Preview jika berupa gambar --}}
+                                    @if(in_array(strtolower($ext), ['jpg','jpeg','png','gif','webp']))
+                                        <img src="{{ asset('storage/'.$d->lampiran) }}" 
+                                             class="img-fluid rounded mb-2 shadow-sm" 
+                                             style="max-height: 200px; object-fit: cover;">
+                                        <br>
+                                    @endif
+                                    
+                                    <a href="{{ asset('storage/'.$d->lampiran) }}" 
+                                       class="btn btn-sm btn-outline-primary" 
+                                       target="_blank">
+                                        Lihat Gambar Penuh
+                                    </a>
+                                </div>
+                            @endif
+                            {{-- AKHIR TAMPILAN LAMPIRAN --}}
+
                             {{-- Feedback --}}
                             @if($d->feedback)
-                                <div class="alert alert-info py-2 px-3 mb-0 mt-3">
+                                <div class="alert alert-info py-2 px-3 mb-0">
                                     <small>
-                                        <strong>💬 Feedback Admin:</strong>
+                                        <strong>💬 Feedback Admin:</strong><br>
                                         {{ $d->feedback }}
                                     </small>
                                 </div>
@@ -116,7 +141,7 @@
 
         {{-- Tombol kembali --}}
         <div class="text-center mt-4">
-            <a href="{{ route('form') }}" class="btn btn-outline-primary btn-sm">
+            <a href="{{ route('form') }}" class="btn btn-outline-light btn-sm">
                 ← Kembali ke Form Pengaduan
             </a>
         </div>

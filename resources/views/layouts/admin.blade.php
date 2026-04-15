@@ -62,7 +62,7 @@
 
         /* KUNCI RESPONSIF: Wrapper untuk konten yield */
         .content-wrapper {
-            background: rgba(255, 255, 255, 0.9); /* Sedikit transparan agar baca teks mudah */
+            background: rgba(255, 255, 255, 0.719); /* Sedikit transparan agar baca teks mudah */
             border-radius: 12px;
             padding: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
