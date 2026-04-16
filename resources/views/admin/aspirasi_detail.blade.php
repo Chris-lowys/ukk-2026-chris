@@ -40,10 +40,20 @@
                     <table class="table table-borderless mb-0">
                         <tr>
                             <td width="35%" class="text-muted fw-semibold">NIS Siswa</td>
-                            <td>{{ $aspirasi->nis }}</td>
+
+                            {{-- ▼ PERUBAHAN: tampilkan Anonim jika nis null --}}
+                            <td>
+                                @if($aspirasi->nis)
+                                    {{ $aspirasi->nis }}
+                                @else
+                                    <span class="badge bg-secondary">🕵️ Anonim</span>
+                                @endif
+                            </td>
                         </tr>
                         <tr>
                             <td class="text-muted fw-semibold">Kelas</td>
+
+                            {{-- ▼ PERUBAHAN: kelas aman jika siswa null (anonim) --}}
                             <td>{{ $aspirasi->siswa->kelas ?? '-' }}</td>
                         </tr>
                         <tr>

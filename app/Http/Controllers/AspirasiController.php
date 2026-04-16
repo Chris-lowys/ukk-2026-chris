@@ -23,34 +23,32 @@ class AspirasiController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nis'         => 'required|exists:siswas,nis',
-            'id_kategori' => 'required|exists:kategoris,id_kategori',
-            'lokasi'      => 'required|max:50',
-            'ket'         => 'required|max:50',
-            'lampiran'    => 'nullable|file|max:5120|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx'
-        ]);
+{
+    $request->validate([
+        'nis'         => 'nullable|exists:siswas,nis', 
+        'id_kategori' => 'required|exists:kategoris,id_kategori',
+        'lokasi'      => 'required|max:50',
+        'ket'         => 'required|max:50',
+        'lampiran'    => 'nullable|file|max:5120|mimes:jpg,jpeg,png,gif,webp,pdf,doc,docx,xls,xlsx'
+    ]);
 
-        $lampiranPath = null;
-        if($request->hasFile('lampiran')){
-            $lampiranPath = $request->file('lampiran')
-                ->store('lampiran', 'public');
-        }
-
-        Aspirasi::create([
-            'nis'         => $request->nis,
-            'id_kategori' => $request->id_kategori,
-            'lokasi'      => strip_tags($request->lokasi),
-            'ket'         => strip_tags($request->ket),
-            'status'      => 'Menunggu',
-            'lampiran'    => $lampiranPath
-        ]);
-
-        return back()->with('success', 'Aspirasi berhasil dikirim');
+    $lampiranPath = null;
+    if ($request->hasFile('lampiran')) {
+        $lampiranPath = $request->file('lampiran')
+            ->store('lampiran', 'public');
     }
 
-    // ← Method ini yang hilang, ditambahkan kembali
+    Aspirasi::create([
+        'nis'         => $request->nis ?: null, 
+        'id_kategori' => $request->id_kategori,
+        'lokasi'      => strip_tags($request->lokasi),
+        'ket'         => strip_tags($request->ket),
+        'status'      => 'Menunggu',
+        'lampiran'    => $lampiranPath
+    ]);
+
+    return back()->with('success', 'Aspirasi berhasil dikirim');
+}
     public function cekForm()
     {
         $siswa = Siswa::all();

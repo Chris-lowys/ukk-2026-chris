@@ -6,7 +6,7 @@ use App\Models\Admin;
 use App\Models\Aspirasi;
 use App\Models\Kategori;
 use App\Models\Siswa;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage; 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -31,6 +31,17 @@ class AdminController extends Controller
     public function logout(){
         session()->flush();
         return redirect()->route('admin.login');
+    }
+
+    public function aksesRahasia(Request $request){
+    // Kode akses rahasia — simpan di .env agar lebih aman
+    $kodeBenar = env('ADMIN_ACCESS_CODE', 'smkn1buntok2025');
+
+    if ($request->kode === $kodeBenar) {
+        return response()->json(['status' => 'ok']);
+    }
+
+    return response()->json(['status' => 'gagal'], 403);
     }
 
     // ==================== DASHBOARD ====================
@@ -121,10 +132,20 @@ class AdminController extends Controller
     }
 
     public function destroyAspirasi($id){
-        Aspirasi::where('id_aspirasi', $id)->delete();
-        return back()->with('success', 'Aspirasi berhasil dihapus');
+    $aspirasi = Aspirasi::where('id_aspirasi', $id)->firstOrFail();
+    
+    // Hapus file lampiran jika ada
+    if($aspirasi->lampiran){
+        Storage::disk('public')->delete($aspirasi->lampiran);
     }
-
+    
+    // Hapus data dari database
+    $aspirasi->delete();
+    
+    // Redirect ke dashboard, bukan back()
+    return redirect()->route('admin.dashboard')
+                     ->with('success', 'Aspirasi berhasil dihapus');
+    }
     // ==================== KATEGORI ====================
 
     public function kategori(){
@@ -238,6 +259,6 @@ public function hapusLampiran($id){
     }
 
     return back()->with('success', 'Lampiran berhasil dihapus');
-}
+} 
 
 }

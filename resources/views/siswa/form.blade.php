@@ -30,21 +30,47 @@
                 <form action="{{ route('kirim') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- Pilih NIS --}}
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">
-                            👤 NIS Siswa <span class="text-danger">*</span>
-                        </label>
-                        <select name="nis" class="form-select" required>
-                            <option value="">-- Pilih NIS --</option>
-                            @foreach($siswa as $s)
-                                <option value="{{ $s->nis }}"
-                                    {{ old('nis') == $s->nis ? 'selected' : '' }}>
-                                    {{ $s->nis }} - Kelas {{ $s->kelas }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                    {{-- Toggle Anonim --}}
+<div class="mb-3">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="anonim" name="anonim"
+            {{ old('anonim') ? 'checked' : '' }}
+            onchange="toggleNIS(this)">
+        <label class="form-check-label fw-semibold" for="anonim">
+            ⚫ Kirim sebagai Anonim (tanpa NIS)
+        </label>
+    </div>
+    <small class="text-muted">Centang jika tidak ingin mencantumkan identitas</small>
+</div>
+
+{{-- Pilih NIS (disembunyikan jika anonim) --}}
+<div class="mb-3" id="nisField" {{ old('anonim') ? 'style=display:none' : '' }}>
+    <label class="form-label fw-semibold">
+        👤 NIS Siswa <span class="text-danger">*</span>
+    </label>
+    <select name="nis" class="form-select" id="nisSelect">
+        <option value="">-- Pilih NIS --</option>
+        @foreach($siswa as $s)
+            <option value="{{ $s->nis }}"
+                {{ old('nis') == $s->nis ? 'selected' : '' }}>
+                {{ $s->nis }} - Kelas {{ $s->kelas }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<script>
+function toggleNIS(checkbox) {
+    const nisField = document.getElementById('nisField');
+    const nisSelect = document.getElementById('nisSelect');
+    if (checkbox.checked) {
+        nisField.style.display = 'none';
+        nisSelect.value = '';        // kosongkan pilihan
+    } else {
+        nisField.style.display = '';
+    }
+}
+</script>
 
                     {{-- Pilih Kategori --}}
                     <div class="mb-3">

@@ -15,7 +15,7 @@ class Aspirasi extends Model
         'ket',
         'status',
         'feedback',
-        'lampiran'      // ← tambah ini
+        'lampiran'     
     ];
 
     public function siswa(){

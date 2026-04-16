@@ -40,6 +40,9 @@ Route::post('/admin/login', [AdminController::class, 'cekLogin'])
     ->middleware('throttle:admin-login')
     ->name('admin.cekLogin');
 Route::get('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+Route::post('/akses-admin', [AdminController::class, 'aksesRahasia'])
+    ->middleware('throttle:admin-login')
+    ->name('admin.aksesRahasia');
 
 // ===== ADMIN PANEL =====
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function(){

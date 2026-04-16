@@ -273,8 +273,19 @@
                     @forelse($data as $i => $d)
                     <tr>
                         <td>{{ $i + 1 }}</td>
-                        <td>{{ $d->nis }}</td>
+
+                        {{-- ▼ PERUBAHAN: tampilkan Anonim jika nis null --}}
+                        <td>
+                            @if($d->nis)
+                                {{ $d->nis }}
+                            @else
+                                <span class="badge bg-secondary">🕵️ Anonim</span>
+                            @endif
+                        </td>
+
+                        {{-- ▼ PERUBAHAN: kelas juga aman jika siswa null --}}
                         <td>{{ $d->siswa->kelas ?? '-' }}</td>
+
                         <td>
                             <span class="badge bg-secondary">
                                 {{ $d->kategori->ket_kategori ?? '-' }}
@@ -359,7 +370,7 @@
                     @empty
                     <tr>
                         <td colspan="9" class="text-center text-muted py-4">
-                            😕 Belum ada aspirasi masuk
+                             Belum ada aspirasi masuk
                         </td>
                     </tr>
                     @endforelse
